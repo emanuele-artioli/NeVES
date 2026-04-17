@@ -20,13 +20,13 @@ import {
   NeuralPipelineDescriptor,
 } from 'webgpu-neural';
 
+import type { JSX } from 'react';
+
 import { makeSample, SampleInit } from '../SampleLayout';
 import CanvasControls from '../CanvasControls';
 
 import fullscreenTexturedQuadWGSL from '../../shaders/fullscreenTexturedQuad.wgsl';
 import sampleExternalTextureWGSL from '../../shaders/sampleExternalTexture.frag.wgsl';
-
-import type { JSX } from "react";
 
 type Settings = {
   requestFrame: string;
@@ -99,37 +99,32 @@ const init: SampleInit = async ({
   });
 
   function updateVideoFrameTexture() {
-    //if (video.videoWidth > 0 && video.videoHeight > 0) {
-      // const currentWidth = video.videoWidth;
-      // const currentHeight = video.videoHeight;
-      
-      if (video.videoWidth === 0 || video.videoHeight === 0) {
-        console.log("Found invalid frame... Skipping...");
-        return; // Invalid frame, skip   
-      }
+    if (video.videoWidth === 0 || video.videoHeight === 0) {
+      console.log('Found invalid frame... Skipping...');
+      return; // Invalid frame, skip
+    }
 
-      if (video.videoWidth !== WIDTH || video.videoHeight !== HEIGHT) {
-        console.log(`Resolution updated to: ${video.videoWidth}x${video.videoHeight}`);
-        WIDTH = video.videoWidth;
-        HEIGHT = video.videoHeight;
-        videoFrameTexture = device.createTexture({
-          size: [WIDTH, HEIGHT, 1],
-          format: 'rgba16float',
-          usage: GPUTextureUsage.TEXTURE_BINDING
-          | GPUTextureUsage.COPY_DST
-          | GPUTextureUsage.RENDER_ATTACHMENT,
-        });
-        updatePipeline();
-        updateRenderBindGroup();
-        updateCanvasSize();
-      }
-      
-      device.queue.copyExternalImageToTexture(
-        { source: video },
-        { texture: videoFrameTexture },
-        [video.videoWidth, video.videoHeight],
-      );
-    //}
+    if (video.videoWidth !== WIDTH || video.videoHeight !== HEIGHT) {
+      console.log(`Resolution updated to: ${video.videoWidth}x${video.videoHeight}`);
+      WIDTH = video.videoWidth;
+      HEIGHT = video.videoHeight;
+      videoFrameTexture = device.createTexture({
+        size: [WIDTH, HEIGHT, 1],
+        format: 'rgba16float',
+        usage: GPUTextureUsage.TEXTURE_BINDING
+        | GPUTextureUsage.COPY_DST
+        | GPUTextureUsage.RENDER_ATTACHMENT,
+      });
+      updatePipeline();
+      updateRenderBindGroup();
+      updateCanvasSize();
+    }
+
+    device.queue.copyExternalImageToTexture(
+      { source: video },
+      { texture: videoFrameTexture },
+      [video.videoWidth, video.videoHeight],
+    );
   }
 
   // bind 2: compare
@@ -364,8 +359,7 @@ const init: SampleInit = async ({
 
   updateRenderBindGroup();
 
-  effectController.onChange((value) => {
-    // Unused value
+  effectController.onChange(() => {
     updatePipeline();
     updateRenderBindGroup();
     updateCanvasSize();
