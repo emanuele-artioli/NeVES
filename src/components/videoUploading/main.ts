@@ -99,6 +99,10 @@ const init: SampleInit = async ({
   });
 
   function updateVideoFrameTexture() {
+    // if (video.videoWidth > 0 && video.videoHeight > 0) {
+    // const currentWidth = video.videoWidth;
+    // const currentHeight = video.videoHeight;
+
     if (video.videoWidth === 0 || video.videoHeight === 0) {
       console.log('Found invalid frame... Skipping...');
       return; // Invalid frame, skip
@@ -125,6 +129,7 @@ const init: SampleInit = async ({
       { texture: videoFrameTexture },
       [video.videoWidth, video.videoHeight],
     );
+    // }
   }
 
   // bind 2: compare
@@ -359,6 +364,7 @@ const init: SampleInit = async ({
 
   updateRenderBindGroup();
 
+  effectController.onChange(() => {
   effectController.onChange(() => {
     updatePipeline();
     updateRenderBindGroup();
